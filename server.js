@@ -1,23 +1,39 @@
 const express = require ('express');
 const mongoose = require ('mongoose');
+const bodyParser = require ('body-parser');
+const passport = require ('passport');
 
-const freelancer = require ('./routes/api/freelancer');
+const students = require ('./routes/api/students');
+const companies = require ('./routes/api/companies');
+const studentsProfile = require ('./routes/api/studentsProfile');
+
 
 const app = express();
 
+//Body parser middleware
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
+
 //DB Config
 const db = require ('./config/keys').mongoURI;
+var mongoDB = 'mongodb://127.0.0.1/my_database';
 
 //Connect to Mongodb
 mongoose
-    .connect(db, { useNewUrlParser: true })
+    .connect(mongoDB, { useNewUrlParser: true })
     .then(() => console.log('MongoDB Connected'))
     .catch(err  => console.log(err));
 
 
-app.get('/', (req, res) => res.send('Hello'));
+// Passport middleware
+app.use(passport.initialize());
 
-app.use('/api/freelancer', freelancer);
+// Passport Config
+require('./config/passport')(passport);
+
+app.use('/api', students);
+app.use('/api', companies);
+app.use('/api', studentsProfile);
 
 const port = process.env.PORT || 5000;
 
