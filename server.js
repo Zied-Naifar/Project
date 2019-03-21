@@ -13,6 +13,7 @@ const app = express();
 //Body parser middleware
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
+app.use(require('morgan')('dev'))
 
 //DB Config
 const db = require ('./config/keys').mongoURI;
@@ -33,7 +34,7 @@ require('./config/passport')(passport);
 
 app.use('/api', students);
 app.use('/api', companies);
-app.use('/api', studentsProfile);
+app.use('/api/studentprofile', studentsProfile);
 
 const port = process.env.PORT || 5000;
 

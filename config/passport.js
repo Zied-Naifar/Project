@@ -13,19 +13,16 @@ module.exports = passport => {
 
   passport.use(
     new JwtStrategy(opts, (jwt_payload, done) => {
-        Student.findById(jwt_payload.id)
-        .then(student => {
-          if (student) {
-            return done(null, student);
-          }
-          
-        })
-        Company.findById(jwt_payload.id)
-        .then(company => {
-          if (student) {
-             return done(null, company);
-         }
-        })
+        Promise.all([Student.findById(jwt_payload.id), Company.findById(jwt_payload.id)])
+          .then(([student, company]) => {
+            if (student) {
+              return done(null, student);
+            }
+            if (company) {
+              return done(null, company);
+            }
+            return don(null, false)
+          })
     })
   );
 };
