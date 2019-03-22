@@ -16,7 +16,7 @@ app.use(bodyParser.json())
 app.use(require('morgan')('dev'))
 
 //DB Config
-const db = require ('./config/keys').mongoURI;
+// const db = require ('./config/keys').mongoURI;
 var mongoDB = 'mongodb://127.0.0.1/my_database';
 
 //Connect to Mongodb

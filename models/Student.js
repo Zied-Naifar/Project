@@ -1,4 +1,4 @@
-const mongoose = require ('mongoose');
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 //Create Schema
@@ -36,13 +36,3 @@ const StudentSchema = new Schema({
 });
 
 module.exports = student = mongoose.model('student', StudentSchema);
-
-// let studentModel
-
-// try {
-//     studentModel = mongoose.model('student')
-// } catch(err) {
-//     studentModel = mongoose.model('student', StudentSchema);
-// }
-
-// module.exports = studentModel
