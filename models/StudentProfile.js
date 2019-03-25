@@ -12,7 +12,7 @@ const StudentProfileSchema = new Schema({
         required: true,
         max: 40
     },
-    society: {
+    university: {
         type: String
     },
     website: {
@@ -20,10 +20,6 @@ const StudentProfileSchema = new Schema({
     },
     location: {
         type: String
-    },
-    status: {
-        type: String,
-        requied: true
     },
     skills: {
         type: [String],
