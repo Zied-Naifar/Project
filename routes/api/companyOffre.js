@@ -52,7 +52,7 @@ router.get('/handle/:handle', (req, res) => {
 })
 
 
-// @route   GET api/companyoffer/:user_id
+// @route   GET api/companyoffer/:id
 // @desc    Get offre by id
 // @access  Public
 router.get('/:id', (req, res) => {
@@ -167,10 +167,20 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, re
 // @desc    apply for an offer
 // @access  Private
 router.post('/candidate/:id', passport.authenticate('jwt', { session: false }), (req,res) => {
+    const errors = {};
     CompanyOffre.findById(req.params.id)
         .then(offer => {
+            console.log(req.params.id)
+            const list = offer.candidate.map(id => id == id._id)
+            console.log(list)
+            // if()
+            // {   
+            //     errors.condidature = 'You have already pustule on this offer';
+            //     return res.status(404).json(errors);
+            // }
+
             const newCandidate = {
-                user: req.user.id
+                _id: req.user.id
             }
             offer.candidate.unshift(newCandidate)
 
@@ -201,18 +211,5 @@ router.delete('/candidate/:id/:candidate_id', passport.authenticate('jwt', { ses
         })
         .catch(err => res.json({ candidate: 'no candidate' }))
 })
-
-// @route   GET api/companyoffer/candidate/:id
-// @desc    delete apply for an offer
-// @access  Private
-router.get('/candidate/:id', passport.authenticate('jwt', { session: false }), (req,res) => {
-    CompanyOffre.findById(req.params.id)
-        .populate( {
-            path: 'candidate.student',
-            model: 'student' } )
-        // .populate('student', ['name', 'avatar'])
-        .then(offer => res.json(offer));
-})
-
 
 module.exports = router;

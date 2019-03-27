@@ -43,14 +43,6 @@ const CompanyOffreSchema = new Schema({
         type: [String],
         required: true
     },
-    likes: [
-        {
-            student: {
-                type: Schema.Types.ObjectId,
-                ref: 'student'
-            }
-        }
-    ],
     candidate: [
         {
             student: {
@@ -60,6 +52,9 @@ const CompanyOffreSchema = new Schema({
             candidateDate: {
                 type: Date,
                 default: Date.now
+            },
+            isAccepted: {
+                default: false
             }
         }
     ],

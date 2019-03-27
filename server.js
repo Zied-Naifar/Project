@@ -8,6 +8,7 @@ const companies = require ('./routes/api/companies');
 const studentsProfile = require ('./routes/api/studentsProfile');
 const companiesProfile = require ('./routes/api/companiesProfile');
 const companyOffre = require ('./routes/api/companyOffre');
+const admin = require ('./routes/api/admin');
 
 
 const app = express();
@@ -39,6 +40,7 @@ app.use('/api', companies);
 app.use('/api/studentprofile', studentsProfile);
 app.use('/api/companyprofile', companiesProfile);
 app.use('/api/companyoffre', companyOffre);
+app.use('/api/admin', admin);
 
 const port = process.env.PORT || 5000;
 

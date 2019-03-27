@@ -51,6 +51,7 @@ router.get('/:user_id', (req, res) => {
         .catch(err => res.status(404).json(err))
 })
 
+
 // @route   GET api/CompanyProfile
 // @desc    get current company profile
 // @access  Private
@@ -145,5 +146,22 @@ router.delete('/', passport.authenticate('jwt', { session: false }), (req, res) 
         })
 })
 
+// @route   GET api/companyProfile/:handle
+// @desc    Get profile by handle
+// @access  Public
+router.get('/handle/:handle', (req, res) => {
+    console.log('hundle')
+    const errors = {}
+    CompanyProfile.findOne({ handle: req.params.handle })
+        .populate('company', ['name', 'avatar'])
+        .then(profile => {
+            if(!profile) {
+                errors.noprofile = "There is no profile for this user";
+                res.status(404).json(errors);
+            }
+            res.json(profile)
+        })
+        .catch(err => res.status(404).json({profile: 'There is no profile for this user'}))
+})
 
 module.exports = router;
