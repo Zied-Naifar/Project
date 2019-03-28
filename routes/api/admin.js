@@ -53,7 +53,7 @@ router.post('/adminRegister', (req, res) =>{
                     s: '200', // Size
                     r: 'pg', // Rating
                     d: 'mm' //Default
-                }); 
+                });
 
                 const newAdmin = new Admin({
                     name: req.body.name,
@@ -79,8 +79,8 @@ router.post('/adminRegister', (req, res) =>{
         })
 })
 
-// @route   GET api/Students/login
-// @desc    Login Student / Returning JWT Token
+// @route   GET api/admin/adminlogin
+// @desc    Login admin / Returning JWT Token
 // @access  Public 
 router.post('/adminLogin', (req, res) => {
 
@@ -99,31 +99,35 @@ router.post('/adminLogin', (req, res) => {
         .then(admin => {
             // Check for user
             if(!admin) {
-                errors.email = 'admin not found';
+                errors.email = 'Admin not found';
                 return res.status(404).json(errors);
             }
+
             // Check password
-            if(password === admin.password) {
-                    // admin Matched
+            bcrypt.compare(password, admin.password)
+                .then(isMatch => {
+                    if(isMatch){
+                        // admin Matched
 
-                    const payload = { id: admin.id, name: admin.name, type: admin.type} // Create JWT Payload
+                        const payload = { id: admin.id, name: admin.name, avatar: admin.avatar, type: admin.type } // Create JWT Payload
 
-                    // Sign Token
-                    jwt.sign(
-                        payload,
-                        keys.secretOrKey,
-                        {expiresIn : 43200 },
-                        (err, token) => {
-                            res.json({
-                                success: true,
-                                token: 'Bearer ' + token
-                            })
+                        // Sign Token
+                        jwt.sign(
+                            payload,
+                            keys.secretOrKey,
+                            {expiresIn : 43200 },
+                            (err, token) => {
+                                res.json({
+                                    success: true,
+                                    token: 'Bearer ' + token
+                                })
 
-                        })
-            } else {
-                errors.password = 'Password incorrect';
-                return res.status(400).json(errors)
-            }
+                            });
+                    } else {
+                        errors.password = 'Password incorrect';
+                        return res.status(400).json(errors)
+                    }
+                })
         })
 })
 
