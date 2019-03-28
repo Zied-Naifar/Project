@@ -191,4 +191,19 @@ Student.findById(req.params.student_id).then(student => {
 })
 })
 
+// @route   GET api/companyoffer/all
+// @desc    Get all offre that have candidate
+// @access  Public
+router.get('/all/haveoffer', (req, res) => {
+
+    const haveoffer = []
+    CompanyOffre.find()
+        .populate('company', ['name', 'avatar'])
+        .then(offer => {
+            const list = offer.map(el => el.candidate.length !== 0 ? el : {})
+            res.send(list)
+        })
+        .catch(err => res.status(404).json({offer: 'There are no offers'}))
+})
+
 module.exports = router;
