@@ -97,7 +97,7 @@ router.post('/studentLogin', (req, res) => {
                     if(isMatch){
                         // Student Matched
 
-                        const payload = { id: student.id, name: student.name, avatar: student.avatar } // Create JWT Payload
+                        const payload = { id: student.id, name: student.name, avatar: student.avatar, type: student.type } // Create JWT Payload
 
                         // Sign Token
                         jwt.sign(

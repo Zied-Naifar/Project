@@ -97,7 +97,7 @@ router.post('/companyLogin', (req, res) => {
                     if(isMatch){
                         // Sompany Matched
 
-                        const payload = { id: company.id, name: company.name, avatar: company.avatar } // Create JWT Payload
+                        const payload = { id: company.id, name: company.name, avatar: company.avatar, type:company.type } // Create JWT Payload
 
                         // Sign Token
                         jwt.sign(

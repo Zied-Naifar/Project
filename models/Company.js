@@ -32,7 +32,7 @@ const CompanySchema = new Schema({
     type: {
         type: String,
         default: 'company'
-    },
+    },                                                                                                                                                                                                                     
     date: {
         type: String,
         default: Date.now
