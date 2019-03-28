@@ -106,7 +106,7 @@ router.post('/adminLogin', (req, res) => {
             if(password === admin.password) {
                     // admin Matched
 
-                    const payload = { id: admin.id, name: admin.name } // Create JWT Payload
+                    const payload = { id: admin.id, name: admin.name, type: admin.type} // Create JWT Payload
 
                     // Sign Token
                     jwt.sign(
