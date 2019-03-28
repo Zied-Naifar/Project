@@ -16,6 +16,7 @@
     "express": "^4.16.4",
     "gravatar": "^1.8.0",
     "jsonwebtoken": "^8.5.0",
+    "mailgun-js": "^0.22.0",
     "mongoose": "^5.4.19",
     "mongoose-deep-populate": "^3.1.1",
     "morgan": "^1.9.1",

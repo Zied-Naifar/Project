@@ -1,14 +1,23 @@
 const express = require ('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const gravatar = require ('gravatar');
+const bcrypt = require ('bcryptjs');
 const jwt = require ('jsonwebtoken');
 const keys = require ('../../config/keys');
 const passport = require ('passport');
 const async = require('async');
-const nodemailer = require("nodemailer");
-
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'gomycode.project@gmail.com',
+    pass: '0123azeRTY'
+  }
+});
 
 //Load Input Validation
+const validateRegisterInput = require ('../../validation/studentRegister');
 const validateLoginInput = require ('../../validation/login');
 
 //Load Student Model
@@ -22,6 +31,53 @@ const Student = mongoose.model('student')
 router.get('/admintest', (req, res) => 
     res.json({msg : "admin Works"})
 );
+
+// @route   GET api/admin/register
+// @desc    Admin
+// @access  Public 
+router.post('/adminRegister', (req, res) =>{
+    const { errors, isValid } = validateRegisterInput(req.body);
+
+    // Check Validation
+    if(!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    Admin.findOne({email: req.body.email})
+        .then((admin) => {
+            if(admin) {
+                errors.email = 'Email already exist';
+                return res.status(400).json(errors);
+            } else {
+                const avatar = gravatar.url(req.body.email, {
+                    s: '200', // Size
+                    r: 'pg', // Rating
+                    d: 'mm' //Default
+                }); 
+
+                const newAdmin = new Admin({
+                    name: req.body.name,
+                    lastname: req.body.lastname,
+                    birthDate: req.body.birthDate,
+                    email: req.body.email,
+                    password: req.body.password,
+                    avatar
+                });
+                console.log (newAdmin)
+
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(newAdmin.password, salt, (err, hash) =>{
+                        if (err) throw err;
+                        newAdmin.password = hash;
+                        newAdmin
+                            .save()
+                            .then(admin => res.json(admin))
+                            .catch(err => console.log(err));
+                    })
+                })
+            }
+        })
+})
 
 // @route   GET api/Students/login
 // @desc    Login Student / Returning JWT Token
@@ -111,42 +167,24 @@ router.get('/all', (req, res) => {
 // @route   POST api/companyoffer/validation
 // @desc    send email to student
 // @access  Public
-router.post('/validation', (req, res) => {
-        "use strict";
-
-    // async..await is not allowed in global scope, must use a wrapper
-    async function main(){
-
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-        user: "gomycode.project@gmail.com",
-        pass: "0123azeRTY"
+router.post('/validation/:student_id', (req, res) => {
+Student.findById(req.params.student_id).then(student => {
+    var mailOptions = {
+        from: 'gomycode.project@gmail.com',
+        to: student.email,
+        subject: 'Offer validation',
+        text: `bonjour ${student.name}`
+      };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
         }
     });
-
-    // setup email data with unicode symbols
-    let mailOptions = {
-        from: '"GoMyCode 👻" <gomycode.project@gmail.com>', // sender address
-        to: "zied.naifar@gmail.co", // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>" // html body
-    };
-
-    // send mail with defined transport object
-    let info = await transporter.sendMail(mailOptions)
-
-    console.log("Message sent: %s", info.messageId);
-    // Preview only available when sending through an Ethereal account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-    }
-
-    main().catch(console.error);
+    res.json({message : 'done'})
+})
 })
 
 module.exports = router;

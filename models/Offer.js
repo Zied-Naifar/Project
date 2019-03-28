@@ -54,6 +54,7 @@ const CompanyOffreSchema = new Schema({
                 default: Date.now
             },
             isAccepted: {
+                type: Boolean,
                 default: false
             }
         }
