@@ -170,14 +170,13 @@ router.post('/candidate/:id', passport.authenticate('jwt', { session: false }), 
     const errors = {};
     CompanyOffre.findById(req.params.id)
         .then(offer => {
-            const list = offer.candidate.map(id => id == id._id)
-            console.log('list = ' + list.includes(true))
-            if(list.includes(false))
+            const list = offer.candidate.map(id => id = (id._id).toString())
+
+            if(list.includes((req.user.id).toString()))
             {   
                 errors.condidature = 'You have already pustule on this offer';
                 return res.status(404).json(errors);
             }
-            else {
 
             const newCandidate = {
                 _id: req.user.id
@@ -185,7 +184,7 @@ router.post('/candidate/:id', passport.authenticate('jwt', { session: false }), 
             offer.candidate.unshift(newCandidate)
 
             offer.save().then(offer => res.json(offer))
-            }
+            
         })
         .catch(err => res.status(404).json({ offernotfound: 'no offer found' }))
 })

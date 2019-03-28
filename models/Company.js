@@ -29,6 +29,10 @@ const CompanySchema = new Schema({
     avatar: {
         type: String,
     },
+    type: {
+        type: String,
+        default: 'company'
+    },
     date: {
         type: String,
         default: Date.now

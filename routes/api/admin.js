@@ -130,7 +130,7 @@ router.post('/adminLogin', (req, res) => {
 // @route   GET api/companyoffer/candidate/:id
 // @desc    display candidateDetail by id 
 // @access  Public
-router.get('/candidate/:id',  passport.authenticate('jwt', { session: false }), (req,res) => {
+router.get('/candidate/:id', passport.authenticate('jwt', { session: false }), (req,res) => {
     CompanyOffre.findById(req.params.id)   
             .then(offer => {
                 const list =  offer.candidate.map(id => id = id._id)
@@ -167,7 +167,7 @@ router.get('/all', (req, res) => {
 // @route   POST api/companyoffer/validation
 // @desc    send email to student
 // @access  Public
-router.post('/validation/:student_id', (req, res) => {
+router.post('/validation/:student_id', passport.authenticate('jwt', { session: false }), (req, res) => {
 Student.findById(req.params.student_id).then(student => {
     var mailOptions = {
         from: 'gomycode.project@gmail.com',

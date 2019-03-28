@@ -29,6 +29,10 @@ const StudentSchema = new Schema({
     avatar: {
         type: String,
     },
+    type: {
+        type: String,
+        default: 'student'
+    },
     date: {
         type: String,
         default: Date.now
